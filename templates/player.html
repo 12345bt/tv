@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+
+<head>
+   <!-- flowplayer depends on jQuery 1.7.1+ (for now) -->
+   <script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+
+   <!-- flowplayer.js -->
+   <script type="text/javascript" src="/assets/flowplayer/flowplayer.min.js"></script>
+
+   <!-- player styling -->
+   <link rel="stylesheet" type="text/css" href="/assets/flowplayer/skin/skin.css">
+
+   <style>
+       .flowplayer {
+           margin: auto;
+           width: 99vw;
+           height: 96vh;
+       }
+   </style>
+</head>
+
+<body>
+
+   <div class="flowplayer">
+       <video autoplay>
+            <source src="{{ play_link }}" type="application/x-mpegURL">
+       </video>
+   </div>
+
+</body>
