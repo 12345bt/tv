@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 	<head>
-		<title>udoubi TV</title>
+		<title>TV</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<!--[if lte IE 8]><script src="/static/assets/js/ie/html5shiv.js"></script><![endif]-->
@@ -13,7 +13,7 @@
 
 		<!-- Header -->
 			<header id="header" class="alt">
-				<h1><a href="/">udoubi TV</a></h1>
+				<h1><a href="/">TV</a></h1>
 				<a href="#nav">Menu</a>
 			</header>
 
@@ -29,7 +29,7 @@
 		<!-- Banner -->
 			<section id="banner">
 				<i class="icon fa-diamond"></i>
-				<h2>CCTV 6 高分电影欣赏</h2>
+				<h2>高分电影欣赏</h2>
                 <p>云芳，世界上最好的就是这饭，饭里边最好的就是这面，面里边最好的就是里边这蒜，<br />蒜再好，也不如你好看。云芳，你就算了吧。<br/>——《没事偷着乐》</p>
                 <ul class="actions">
                     <li><a href="#" class="button big special">Learn More</a></li>
@@ -41,9 +41,10 @@
 				<div class="inner">
                     {% for info in movies %}
 					<article class="feature left">
-                        <span class="image"><img src="{{ info.image }}" alt="" /></span>
+                        <span class="image"><a href="/play/{{ info.timeline }}"><img src="{{ info.image }}" alt="" /></a></span>
 						<div class="content">
                             <h2>{{ info.title }}</h2>
+                            <h4>{{ info.rating }} 分&nbsp;&nbsp;&nbsp;&nbsp;{{ info.genres }}</h4>
                             <p>{{ info.summary }}</p>
 							<ul class="actions">
 								<li>

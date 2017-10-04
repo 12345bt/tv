@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'jj#-som*#3pur8jw#%x@rx%=(rh^0j6hhcarq0sknh+xj)grp2'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['tv.tulip.ink']
 
 
 # Application definition
@@ -79,7 +79,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'tv',
         'USER': 'root',
-        'PASSWORD': '21txtcyy',
+        'PASSWORD': 'your-passwd',
         'HOST': '127.0.0.1',
     }
 }

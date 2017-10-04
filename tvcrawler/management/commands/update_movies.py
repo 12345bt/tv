@@ -1,4 +1,6 @@
+import functools
 import json
+import time
 import re
 
 import requests
@@ -8,11 +10,22 @@ from django.core.management.base import BaseCommand
 from tvcrawler.models import Movie
 
 excluded = re.compile(r'中国电影报道|光影星播客|音乐电影欣赏.*|今日影评|国片大首映.*')
+remove_unnecessary = functools.partial(re.compile(r'（[上中下]）').sub, '')
+
+
+def get(url):
+    time.sleep(3)
+    r = requests.get(url)
+    while r.status_code == 400:
+        print('Got http 400, sleep 10min...')
+        time.sleep(600)
+        r = requests.get(url)
+    return r
 
 
 def get_movie_info(name):
-    r = requests.get('http://api.douban.com/v2/movie/search?count=1&q=' + name)
-    # FIXME: http 400
+    name = remove_unnecessary(name)
+    r = get('https://api.douban.com/v2/movie/search?count=1&q=' + name)
     info = json.loads(r.text)['subjects']
     if len(info) == 0:
         return None
@@ -23,19 +36,17 @@ def get_movie_info(name):
 
 
 def get_movie_summary(id):
-    r = requests.get('http://api.douban.com/v2/movie/' + id)
+    r = get('https://api.douban.com/v2/movie/' + id)
     summary = json.loads(r.text)['summary']
-    if len(summary) > 200:
-        summary = summary[:200] + '……'
+    if len(summary) > 300:
+        summary = summary[:300] + '……'
     return summary
 
 
-def get_movies(channel):
-    #  r = requests.get('http://hdtv.neu6.edu.cn/time-select?p=' + channel)
-    #  r.raise_for_status()
-    with open('/home/csm/t') as f:
-        text = f.read()
-    soup = BeautifulSoup(text, 'lxml', parse_only=SoupStrainer('div'))
+def save_movies(channel):
+    r = requests.get('http://hdtv.neu6.edu.cn/time-select?p=' + channel)
+    r.raise_for_status()
+    soup = BeautifulSoup(r.text, 'lxml', parse_only=SoupStrainer('div'))
     for div in soup.find_all(id='list_item'):
         next = div.find_next()
         if next['id'] != 'list_status':
@@ -61,7 +72,7 @@ def get_movies(channel):
             print('low rating ignored:', movie_name, info['rating']['average'])
             continue
 
-        yield Movie(
+        Movie(
             title=movie_name,
             rating=info['rating']['average'],
             genres=' / '.join(info['genres']),
@@ -69,10 +80,17 @@ def get_movies(channel):
             movie_id=info['id'],
             timeline=timeline,
             image=info['images']['large']
-        )
+        ).save()
+        print('[SAVED]', movie_name)
 
 
 class Command(BaseCommand):
     def handle(self, *args, **kwargs):
-        for movie in get_movies('cctv6hd'):
-            movie.save()
+        Movie.objects.all().delete()
+        save_movies('chchd')
+        print('\n[DONE] chcd')
+        save_movies('chcatv')
+        print('\n[DONE] chcatv')
+        save_movies('cctv6hd')
+        print('\n[DONE] cctv6hd')
+        print('\nAll done.')

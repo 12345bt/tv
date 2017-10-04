@@ -10,6 +10,6 @@ def index(request):
 
 def play(request, timeline):
     context = {
-        'play_link': 'http://tv.udoubi.top/media2/program-{}.m3u8'.format(timeline)
+        'play_link': 'https://tv.tulip.ink/media2/program-{}.m3u8'.format(timeline)
     }
     return render(request, 'tvcrawler/player.html', context)
